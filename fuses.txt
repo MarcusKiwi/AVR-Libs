@@ -1,0 +1,13 @@
+# http://eleccelerator.com/fusecalc/
+
+# atmega328p 1mhz int
+avrdude -c usbasp -p atmega328p -U lfuse:w:0x62:m -U hfuse:w:0xD9:m -U efuse:w:0xFF:m -U lock:w:0xFF:m
+
+# atmega328p 8mhz int
+avrdude -c usbasp -p atmega328p -U lfuse:w:0xE2:m -U hfuse:w:0xD9:m -U efuse:w:0xFF:m -U lock:w:0xFF:m
+
+# attiny85 1mhz internal
+avrdude -c usbasp -p attiny85 -U lfuse:w:0x62:m -U hfuse:w:0xDF:m -U efuse:w:0xFF:m -U lock:w:0xFF:m
+
+# attiny85 8mhz internal
+avrdude -c usbasp -p attiny85 -U lfuse:w:0xE2:m -U hfuse:w:0xDF:m -U efuse:w:0xFF:m -U lock:w:0xFF:m
