@@ -3,6 +3,9 @@
 #define SSD1306_CMD 0x00
 #define SSD1306_DAT 0x40
 
+// Internal variable.
+uint8_t ssd1306_config_addr;
+
 const uint8_t ssd1306_init_seq[] PROGMEM = {
 	0xAE,	// off
 	0xD5,	// display clock div

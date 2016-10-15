@@ -36,7 +36,4 @@ void ssd1306_chr(char c);
 // Writes one column of data to screen.
 void ssd1306_raw(uint8_t x);
 
-// Internal variable.
-uint8_t ssd1306_config_addr;
-
 #endif /* SSD1306_H */
