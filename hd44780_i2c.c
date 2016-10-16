@@ -1,11 +1,19 @@
 #include "hd44780_i2c.h"
 
-// Internal variable.
-uint8_t hd44780_i2c_bus;
+#define HD44780_I2C_LED 3
+#define HD44780_I2C_E   2
+#define HD44780_I2C_RW  1
+#define HD44780_I2C_RS  0
 
-void hd44780_i2c_init() {
+// Internal variables.
+uint8_t hd44780_i2c_bus = 0b00001001;
+uint8_t hd44780_i2c_addr;
+
+void hd44780_i2c_init(uint8_t addr) {
+	// store i2c addr
+	hd44780_i2c_addr = addr;
 	// command mode
-	hd44780_i2c_bus = 0b00001000;
+	hd44780_i2c_bus &= ~(1<<HD44780_I2C_RS);
 	//warmup period
 	i2c_init();
 	_delay_ms(17);
@@ -15,33 +23,57 @@ void hd44780_i2c_init() {
 	hd44780_i2c_chr(0x32);
 	_delay_us(150);
 	// init commands
-	hd44780_i2c_chr(0x28);
-	hd44780_i2c_chr(0x0C);
-	hd44780_i2c_chr(0x06);
-	hd44780_i2c_chr(0x01);
+	hd44780_i2c_chr(0x28); // function set (4 bit, 2 lines, english font)
+	hd44780_i2c_chr(0x0C); // display on/off control (display on, no cursor char, no cursor flash)
+	hd44780_i2c_chr(0x06); // entry mode (autoincrement right, cursor shift on)
+	hd44780_i2c_chr(0x01); // cls
+	_delay_ms(2); // cls is slow
 	// data mode
-	hd44780_i2c_bus = 0b00001001;
-	_delay_ms(2);
+	hd44780_i2c_bus |= (1<<HD44780_I2C_RS);
+}
+
+void hd44780_i2c_led(uint8_t led) {
+	if(led==0) {
+		hd44780_i2c_bus &= ~(1<<HD44780_I2C_LED);
+	} else {
+		hd44780_i2c_bus |= (1<<HD44780_I2C_LED);
+	}
+	i2c_start(hd44780_i2c_addr,I2C_W);
+	i2c_write(hd44780_i2c_bus);
+	i2c_stop();
+}
+
+void hd44780_i2c_cursor(uint8_t cursor) {
+	// command mode
+	hd44780_i2c_bus &= ~(1<<HD44780_I2C_RS);
+	// cursor on/off command
+	if(cursor==0) {
+		hd44780_i2c_chr(0x0C);
+	} else {
+		hd44780_i2c_chr(0x0D);
+	}
+	// data mode
+	hd44780_i2c_bus |= (1<<HD44780_I2C_RS);
 }
 
 void hd44780_i2c_cls() {
 	// command mode
-	hd44780_i2c_bus = 0b00001000;
+	hd44780_i2c_bus &= ~(1<<HD44780_I2C_RS);
 	// clear command	
 	hd44780_i2c_chr(0x01);
 	// data mode
-	hd44780_i2c_bus = 0b00001001;
+	hd44780_i2c_bus |= (1<<HD44780_I2C_RS);
 	// slow command so additional delay
 	_delay_ms(2);
 }
 
 void hd44780_i2c_pos(uint8_t x, uint8_t y) {
 	// command mode
-	hd44780_i2c_bus = 0b00001000;
+	hd44780_i2c_bus &= ~(1<<HD44780_I2C_RS);
 	// set display memory location
 	hd44780_i2c_chr(0x80 | ((y*0x40) + x));
 	// data mode
-	hd44780_i2c_bus = 0b00001001;
+	hd44780_i2c_bus |= (1<<HD44780_I2C_RS);
 }
 
 void hd44780_i2c_mem(const char* c) {
@@ -66,20 +98,20 @@ void hd44780_i2c_chr(char c) {
 	//   nibble 2: LED, E, RW, RS - the bus control pins
 
 	uint8_t outputs;
-	i2c_start(0x27,I2C_W);
+	i2c_start(hd44780_i2c_addr,I2C_W);
 
 	outputs = (c & 0xF0) | hd44780_i2c_bus;
 	i2c_write(outputs);
-	outputs ^= (1<<2);
+	outputs ^= (1<<HD44780_I2C_E);
 	i2c_write(outputs);
-	outputs ^= (1<<2);
+	outputs ^= (1<<HD44780_I2C_E);
 	i2c_write(outputs);
             
 	outputs = (c<<4) | hd44780_i2c_bus;
 	i2c_write(outputs);
-	outputs ^= (1<<2);
+	outputs ^= (1<<HD44780_I2C_E);
 	i2c_write(outputs);
-	outputs ^= (1<<2);
+	outputs ^= (1<<HD44780_I2C_E);
 	i2c_write(outputs);
 
 	i2c_stop();

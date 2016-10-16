@@ -15,16 +15,22 @@
  * display as you can with most others. Display has its own inbuilt
  * font in ROM. You can create a couple of custom characters for it
  * to display, but this isn't implemented by this library.
+ * This library only works for 1602 displays, for now.
  ******************************************************************/
 
-// Initializes display.
-void hd44780_i2c_init();
+// Initializes display. Addr is usually 0x27.
+void hd44780_i2c_init(uint8_t addr);
+
+// Enable/disable LED backlight.
+void hd44780_i2c_led(uint8_t led);
+
+// Show/hide flashing cursor.
+void hd44780_i2c_cursor(uint8_t cursor);
 
 // Clears all pixels on screen.
 void hd44780_i2c_cls();
 
 // Repositions cursor to given location.
-// Multiply x*6 to keep things aligned for characters.
 void hd44780_i2c_pos(uint8_t x, uint8_t y);
 
 // Writes string to screen from progmem.
