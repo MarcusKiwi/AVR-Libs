@@ -9,24 +9,24 @@ void dht11_read(struct dht11_data *retval) {
 	uint8_t pos = 0;
 
 	// dataput mode
-	DHT11_DDR |= (1<<1);
+	DHT11_DDR |= (1<<DHT11_DAT);
 	// default state high
-	DHT11_PORT |= (1<<1);
+	DHT11_PORT |= (1<<DHT11_DAT);
 	// send >18ms low signal
-	DHT11_PORT &= ~(1<<1);
+	DHT11_PORT &= ~(1<<DHT11_DAT);
 	_delay_ms(20);
 	// input pullup
-	DHT11_DDR &= ~(1<<1);
-	DHT11_PORT |= (1<<1);
+	DHT11_DDR &= ~(1<<DHT11_DAT);
+	DHT11_PORT |= (1<<DHT11_DAT);
 	// receive ~80us lo start signal, wait for it to finish
 	_delay_us(20);
-	while((DHT11_PIN & (1<<1))==0);
+	while((DHT11_PIN & (1<<DHT11_DAT))==0);
 	// receive ~80us hi start signal, wait for it to finish
-	while((DHT11_PIN & (1<<1))!=0);
+	while((DHT11_PIN & (1<<DHT11_DAT))!=0);
 
 	// receive 5x8 bits
 	while(pos<40) {
-		crnt = (DHT11_PIN & (1<<1));
+		crnt = (DHT11_PIN & (1<<DHT11_DAT));
 		if(crnt==last) {
 			// count
 			if(len!=255) len++;
