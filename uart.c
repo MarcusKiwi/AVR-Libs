@@ -1,6 +1,6 @@
-#include "serial.h"
+#include "uart.h"
 
-void serial_init() {
+void uart_init() {
 	// baud rate
 	UBRR0H = ((F_CPU/16/BAUD)-1)>>8;
 	UBRR0L = ((F_CPU/16/BAUD)-1);
@@ -12,7 +12,7 @@ void serial_init() {
 	UCSR0B = (1<<TXEN0) | (1<<RXEN0);
 }
 
-void serial_tx_mem(const char *c) {
+void uart_tx_mem(const char *c) {
 	for(; pgm_read_byte(c)!=0; c++) {
 		// wait for USART-TX to be ready
 		while((UCSR0A&(1<<UDRE0))==0);
@@ -21,7 +21,7 @@ void serial_tx_mem(const char *c) {
 	}
 }
 
-void serial_tx_str(char* c) {
+void uart_tx_str(char* c) {
 	for(; *c!=0; c++) {
 		// wait for USART-TX to be ready
 		while((UCSR0A&(1<<UDRE0))==0);
@@ -30,26 +30,26 @@ void serial_tx_str(char* c) {
 	}
 }
 
-void serial_tx_chr(char c) {
+void uart_tx_chr(char c) {
 	// wait for USART-TX to be ready
 	while((UCSR0A&(1<<UDRE0))==0);
 	// send byte
 	UDR0 = c;
 }
 
-uint8_t serial_rx_check() {
+uint8_t uart_rx_check() {
 	return ((UCSR0A&(1<<RXC0))==0);
 }
 
-void serial_rx_wait() {
+void uart_rx_wait() {
 	while((UCSR0A&(1<<RXC0))==0);
 }
 
-char serial_rx_chr() {
+char uart_rx_chr() {
 	return UDR0;
 }
 
-void serial_rx_str(char* str, uint8_t len) {
+void uart_rx_str(char* str, uint8_t len) {
 	// vars
 	uint16_t timeout;
 	uint8_t pos = 0;

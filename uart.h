@@ -1,11 +1,11 @@
-#ifndef SERIAL_H
-#define SERIAL_H
+#ifndef UART_H
+#define UART_H
 
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 
 // Libraries required in project makefile:
-// LIBS = serial
+// LIBS = uart
 
 /*******************************************************************
  * BAUD RATE: Set with #define in makefile
@@ -16,28 +16,28 @@
  * Arduino-Mega: RXD=0 TXD=1
  ******************************************************************/
 
-// Initialize serial
-void serial_init();
+// Initialize uart
+void uart_init();
 
 // Sends string from progrmem.
-void serial_tx_mem(const char *c);
+void uart_tx_mem(const char *c);
 
 // Sends string.
-void serial_tx_str(char* c);
+void uart_tx_str(char* c);
 
 // Sends char.
-void serial_tx_chr(char c);
+void uart_tx_chr(char c);
 
 // Check for data to process.
-uint8_t serial_rx_check();
+uint8_t uart_rx_check();
 
 // Wait for data to receive. 
-void serial_rx_wait();
+void uart_rx_wait();
 
 // Receive one byte.
-char serial_rx_chr();
+char uart_rx_chr();
 
 // Receive to string.
-void serial_rx_str(char* str, uint8_t len);
+void uart_rx_str(char* str, uint8_t len);
 
-#endif /* SERIAL_H */
+#endif /* UART_H */
