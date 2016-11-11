@@ -38,7 +38,7 @@ void uart_tx_chr(char c) {
 }
 
 uint8_t uart_rx_check() {
-	return ((UCSR0A&(1<<RXC0))==0);
+	return(UCSR0A&(1<<RXC0));
 }
 
 void uart_rx_wait() {
