@@ -3,6 +3,7 @@
 
 #include <avr/io.h>
 #include <avr/pgmspace.h>
+#include <avr/interrupt.h>
 
 // Libraries required in project makefile:
 // LIBS = uart
@@ -18,6 +19,15 @@
 
 // Initialize uart
 void uart_init();
+
+// Initialize uart with interrupts.
+// WARNING: Not tested well at all.
+void uart_init_int();
+
+// Handle RX interrupts with:
+// ISR(USART_RX_vect) {}
+// Handle TX interrupts with:
+// ISR(USART_TX_vect) {}
 
 // Sends string from progrmem.
 void uart_tx_mem(const char *c);

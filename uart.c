@@ -12,6 +12,12 @@ void uart_init() {
 	UCSR0B = (1<<TXEN0) | (1<<RXEN0);
 }
 
+void uart_init_int() {
+	uart_init();
+	UCSR0B |= (1<<RXCIE0) | (1<<TXCIE0);
+	sei();
+}
+
 void uart_tx_mem(const char *c) {
 	for(; pgm_read_byte(c)!=0; c++) {
 		// wait for USART-TX to be ready
