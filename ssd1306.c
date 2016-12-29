@@ -93,12 +93,21 @@ void ssd1306_pos() {
 }
 
 void ssd1306_mem(const char* c) {
+	char c_clean;
+	// open comms
 	i2c_start(ssd1306_config_addr,I2C_W);
-	i2c_write(SSD1306_DAT); // data mode
+	i2c_write(SSD1306_DAT);
+	// while char is not null
 	for(; pgm_read_byte(c)!=0; c++) {
+		// deal with out of range chars and get real position in font array
+		if((pgm_read_byte(c)<32)||(pgm_read_byte(c)>128)) {
+			c_clean = 128-32;
+		} else {
+			c_clean = pgm_read_byte(c)-32;
+		}
 		// send display the character, column by column for font
 		for(uint8_t col=0; col<5; col++) {
-			i2c_write(pgm_read_byte(&(font8x5[pgm_read_byte(c)-32][col])));
+			i2c_write(pgm_read_byte(&(font8x5[c_clean][col])));
 		}
 	}
 	// space between letters
@@ -108,13 +117,21 @@ void ssd1306_mem(const char* c) {
 }
 
 void ssd1306_str(char* c) {
+	char c_clean;
+	// open comms
 	i2c_start(ssd1306_config_addr,I2C_W);
-	i2c_write(SSD1306_DAT); // data mode
-	// while character is not 0
-	for(; *c != 0; c++) {
-		// send display the character, column by column for font
+	i2c_write(SSD1306_DAT);
+	// while char is not null
+	for(; *c!=0; c++) {
+		// deal with out of range chars and get real position in font array
+		if((*c<32)||(*c>128)) {
+			c_clean = 128-32;
+		} else {
+			c_clean = *c-32;
+		}
+		// send char to display
 		for(uint8_t col=0; col<5; col++) {
-			i2c_write(pgm_read_byte(&(font8x5[*c-32][col])));
+			i2c_write(pgm_read_byte(&(font8x5[c_clean][col])));
 		}
 	}
 	// space between letters
@@ -124,11 +141,18 @@ void ssd1306_str(char* c) {
 }
 
 void ssd1306_chr(char c) {
+	// deal with out of range chars and get real position in font array
+	if((c<32)||(c>129)) {
+		c = 128-32;
+	} else {
+		c = c-32;
+	}
+	// open comms
 	i2c_start(ssd1306_config_addr,I2C_W);
-	i2c_write(SSD1306_DAT); // data mode
-	// send display the character, column by column for font
+	i2c_write(SSD1306_DAT);
+	// for each column in font
 	for(uint8_t col=0; col<5; col++) {
-		i2c_write(pgm_read_byte(&(font8x5[c-32][col])));
+		i2c_write(pgm_read_byte(&(font8x5[c][col])));
 	}
 	// space between letters
 	i2c_write(0x00);

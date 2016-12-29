@@ -10,6 +10,6 @@
  * This library is a font for display libraries to use.
  ******************************************************************/
 
-const char font8x5[96][5] PROGMEM;
+const char font8x5[97][5] PROGMEM;
 
 #endif /* FONT8X5_H */

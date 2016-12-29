@@ -57,10 +57,16 @@ void pcd8544_str(char* c) {
 }
 
 void pcd8544_chr(char c) {
+	// deal with out of range chars and get real position in font array
+	if((c<32)||(c>129)) {
+		c = 128-32;
+	} else {
+		c = c-32;
+	}
 	// for each column in font
 	for(uint8_t i=0; i<5; i++) {
 		// read column for character from progmem and display it
-		pcd8544_raw(pgm_read_byte(&(font8x5[c-32][i])));
+		pcd8544_raw(pgm_read_byte(&(font8x5[c][i])));
 	}
 	// space between characters
 	pcd8544_raw(0x00);
