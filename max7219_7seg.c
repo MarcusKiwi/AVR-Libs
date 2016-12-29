@@ -23,7 +23,7 @@ void max7219_chr(struct max7219_conf* conf, uint8_t col, char c) {
 	col = 8 - col;
 	// invalid column exit
 	if(col>8) return;
-	// deal with c out of range chars
+	// deal with out of range chars
 	if((c<32)||(c>127)) {
 		c = '#';
 	}
