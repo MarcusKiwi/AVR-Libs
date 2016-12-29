@@ -27,7 +27,7 @@ void ssd1306_pos();
 // Writes string to screen from progmem.
 void ssd1306_mem(const char* c);
 
-// Writes string to screen.
+// Writes string to screen from sram.
 void ssd1306_str(char* c);
 
 // Writes one character to screen.

@@ -36,7 +36,7 @@ void hd44780_i2c_pos(uint8_t x, uint8_t y);
 // Writes string to screen from progmem.
 void hd44780_i2c_mem(const char* c);
 
-// Writes string to screen.
+// Writes string to screen from sram.
 void hd44780_i2c_str(char* c);
 
 // Writes one character to screen.

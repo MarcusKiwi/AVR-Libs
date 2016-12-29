@@ -64,7 +64,7 @@ void pcd8544_pos(uint8_t x, uint8_t y);
 // Writes string to screen from progmem.
 void pcd8544_mem(const char* c);
 
-// Writes string to screen.
+// Writes string to screen from sram.
 void pcd8544_str(char* c);
 
 // Writes one character to screen.

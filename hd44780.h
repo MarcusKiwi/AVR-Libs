@@ -63,7 +63,7 @@ void hd44780_pos(uint8_t x, uint8_t y);
 // Writes string to screen from progmem.
 void hd44780_mem(const char* c);
 
-// Writes string to screen.
+// Writes string to screen from sram.
 void hd44780_str(char* c);
 
 // Writes one character to screen.
