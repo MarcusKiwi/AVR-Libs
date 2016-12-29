@@ -29,6 +29,9 @@ CFLAGS += -ffunction-sections -fdata-sections
 
 # Do not alter this
 
+CC = avr-gcc
+CXX = avr-g++
+
 CFLAGS += -Os -std=gnu99 -mmcu=$(MCU) -DF_CPU=$(F_CPU)UL -DBAUD=$(BAUD)UL
 
 LIBDIR = $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
